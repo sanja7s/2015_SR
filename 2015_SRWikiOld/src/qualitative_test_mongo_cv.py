@@ -13,6 +13,7 @@ import json
 from pymongo import MongoClient
 from pprint import pprint
 from collections import defaultdict
+import math
 
 '''
 example output from the mongo db, for reference
@@ -47,7 +48,7 @@ db = client.wiki_db_v1
 reads = db.concept_vectors
 
 # words which we want to test
-word1 = "sanja"
+word1 = "hate"
 word2 = "love"
 CV1 = reads.find({"_id":word1})
 CV2 = reads.find({"_id":word2})
@@ -55,22 +56,50 @@ CV2 = reads.find({"_id":word2})
 concepts1 = defaultdict(int)
 concepts2 = defaultdict(int)
 # extract first word cv to dict
-i = 0
+N1 = 0
 # NB here that we need to access CV1[0] from the cursor for out data
 for el in CV1[0]["cv"]:
-    i += 1
-    concepts1[el["aid"]] = concepts1[el["value"]]
-print i
+    N1 += 1
+    concepts1[el["aid"]] = el["value"]
+print N1
 #print concepts1
 # extract second word cv to dict
-i = 0
+N2 = 0
 # NB here that we need to access CV2[0] from the cursor for out data
 for el in CV2[0]["cv"]:
-    i += 1
-    concepts2[el["aid"]] = concepts2[el["value"]]
-print i
+    N2 += 1
+    concepts2[el["aid"]] = el["value"]
+print N2
 #print concepts2
-    
+
+commonCV = defaultdict(int)
+SRdist = 0
+SQRsumv1 = 0
+SQRsumv2 = 0
+N12 = 0
+
+for el1 in concepts1.keys():
+    for el2 in concepts2.keys():
+        if el1 == el2:
+            N12 += 1
+            v1, v2 = concepts1[el1], concepts2[el2] 
+            print v1, v2
+            commonCV[el1] = (v1, v2)
+            SRdist += v1 * v2
+            SQRsumv1 += v1*v1
+            SQRsumv2 += v2*v2
+             
+if N12 > 0:    
+    Ochiai = float(N12)/math.sqrt(N1*N2)
+    print "Common el ", N12, " Ochiai ", Ochiai
+    #print commonCV 
+    SRdist = SRdist / float(SQRsumv1*SQRsumv2)
+    print "Before Ochiai", SRdist
+    SRdist = Ochiai * SRdist
+    print "After Ochiai", SRdist
+else:
+    SRdist = 0
+    print "No common concepts so SR distance = ", SRdist
 '''
     u1f = usrs.find({ "id": u1 }, {"followers_count":1, "friends_count":1} )
     if u1f.count() > 0:
