@@ -47,7 +47,7 @@ for line in f:
         f_out.write(line_out + '\n')
     
     if i >= TESTN:
-        print "exted due to the limit in test lines", TESTN
+        print "exited due to the limit in test lines", TESTN
         break
         
 print "ENglish tweets found: ", k, " Percent: ", k/float(i)*100

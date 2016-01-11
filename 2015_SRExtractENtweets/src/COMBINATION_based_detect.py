@@ -4,7 +4,7 @@ Created on Mar 4, 2015
 @author: sscepano
 '''
 '''
-This code combines two approaches to detect if the tweet text is in ENglish.
+This code combines two approaches to detect if the tweet text is in English.
 
 1) At first we use stopwords-based approach: stopwords are recognized based on the NLTK corpus of stopwords from many languages.
 Then likelihood of the languages is calculated based on the number of stopwords found matching that particular language.
@@ -12,7 +12,7 @@ The language from which the highest number of stopwords is found is selected as 
 
 2) If this approach did not result in EN tweet detected, we double-check with all words based approach.
 NLTK has another corpus, where we check for all the words and if all the words of the tweet are in EN corpus,
-then the tweet is classified as EN still. This can happen when the tweet does not have stopwords in order to be short.
+then the tweet is classified still as EN. This can happen when the tweet does not have stopwords (written by the user so to be short).
 
 If the tweet is found to be in EN in any approach, we output it.
 '''
@@ -71,6 +71,6 @@ for line_orig in f:
         print "exited due to the limit in test lines", TESTN
         break
 
-print "COMBINATION based detect"     
-print "ENglish tweets found: ", k, " Percent: ", k/float(i)*100
+print "COMBINATION (stopwords + all words NLTK corpses) based detect"     
+print "English tweets found: ", k, " Percent: ", k/float(i)*100
 print "Total tweets processed: ", i
